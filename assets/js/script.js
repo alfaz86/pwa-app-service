@@ -14,10 +14,14 @@ function navigation(id) {
     $("#" + id).addClass("footer-active")
 }
 
+function selectType(id) {
+    $(".btn-filter").removeClass("select-type")
+    $("#" + id).addClass("select-type")
+}
+
 $(function () {
     $(window).scroll(function () {
         var margin = $('nav').height();
-        console.log(margin);
         if ($(this).scrollTop() >= margin) {
             $(".sticky-top").addClass("bg-white border-bottom")
         } else {
@@ -144,4 +148,9 @@ function fecth(limit, start, name, type) {
 
 function numFormat(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
+const setType = (newType) => {
+    type = newType == "all" ? "" : newType;
+    selectType(newType)
 }

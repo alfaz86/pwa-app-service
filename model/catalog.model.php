@@ -9,6 +9,10 @@ class CatalogModel extends Connection
         $sql = "SELECT * FROM catalogs";
         if ($data->search->name && $data->search->type) {
             $sql .= " WHERE name LIKE '%{$data->search->name}%' AND type = '{$data->search->type}'";
+        } elseif ($data->search->name) {
+            $sql .= " WHERE name LIKE '%{$data->search->name}%'";
+        } elseif ($data->search->type) {
+            $sql .= " WHERE type = '{$data->search->type}'";
         }
         $sql .= " LIMIT {$data->limit} OFFSET {$data->start}";
         $result = $this->connect()->query($sql);
