@@ -24,4 +24,18 @@ class CatalogModel extends Connection
         }
         return [];
     }
+
+    public function catalogAllDAta($data)
+    {
+        $sql = "SELECT * FROM catalogs";
+        if ($data->search->name && $data->search->type) {
+            $sql .= " WHERE name LIKE '%{$data->search->name}%' AND type = '{$data->search->type}'";
+        } elseif ($data->search->name) {
+            $sql .= " WHERE name LIKE '%{$data->search->name}%'";
+        } elseif ($data->search->type) {
+            $sql .= " WHERE type = '{$data->search->type}'";
+        }
+        $result = $this->connect()->query($sql);
+        return $result->num_rows;
+    }
 }

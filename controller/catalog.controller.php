@@ -9,7 +9,8 @@ class CatalogController extends CatalogModel
         echo json_encode([
             'data' => $this->catalogSearch($data),
             'status' => true,
-            'result' => true
+            'result' => true,
+            'all_data' => $this->catalogAllDAta($data)
         ]);
     }
 }

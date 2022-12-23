@@ -170,3 +170,15 @@ body {
     background-color: var(--theme-blue-1) !important;
     border-color: var(--theme-blue-1) !important;
 }
+
+@media (min-width: 400px) {
+	.btn-filter{
+		min-width: 60px !important;
+	}
+}
+
+@media (min-width: 480px) {
+	.btn-filter{
+		min-width: 90px !important;
+	}
+}
