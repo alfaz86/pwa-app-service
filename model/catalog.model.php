@@ -14,7 +14,7 @@ class CatalogModel extends Connection
         } elseif ($data->search->type) {
             $sql .= " WHERE type = '{$data->search->type}'";
         }
-        $sql .= " LIMIT {$data->limit} OFFSET {$data->start}";
+        $sql .= " ORDER BY id DESC LIMIT {$data->limit} OFFSET {$data->start}";
         $result = $this->connect()->query($sql);
         if ($result->num_rows > 0) {
             while ($data = mysqli_fetch_assoc($result)) {
@@ -37,5 +37,16 @@ class CatalogModel extends Connection
         }
         $result = $this->connect()->query($sql);
         return $result->num_rows;
+    }
+
+    public function createCatalog($data)
+    {
+        $qname  = "name  = '$data->name',";
+        $qprice = "price = '$data->price',";
+        $qtype  = "type  = '$data->type',";
+        $qimg   = "img   = '$data->img'";
+        $sql    = "INSERT INTO catalogs SET $qname $qprice $qtype $qimg";
+        $result = $this->connect()->query($sql);
+        return $result;
     }
 }

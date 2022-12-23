@@ -110,14 +110,14 @@ body {
 	color: #fff;
 }
 
-.input-group-text.btn.btn-outline-success:active,
-.input-group-text.btn.btn-outline-success:hover {
+.input-group-text.btn:active,
+.input-group-text.btn:hover {
     color: #fff !important;
     background-color: var(--theme-blue-1) !important;
     border-color: var(--theme-blue-1) !important;
 }
 
-.input-group-text.btn.btn-outline-success:focus,
+.input-group-text.btn:focus,
 #search:focus {
     box-shadow: none !important;
     border-color: var(--theme-g-2);
@@ -181,4 +181,48 @@ body {
 	.btn-filter{
 		min-width: 90px !important;
 	}
+}
+
+#btn-add-catalog {
+	position: fixed;
+	right: 1rem;
+	bottom: 85px;
+	width: 65px;
+	height: 65px;
+	border-radius: 50%;
+	background-color: #FFF;
+	border-color: var(--theme-border);
+}
+
+.btn-outline-theme:focus {
+	outline: none;
+	box-shadow: none;
+	color: #fff !important;
+    background-color: var(--theme-blue-1) !important;
+    border-color: var(--theme-blue-1) !important;
+}
+
+.form-control:focus,
+.custom-file-input:focus ~ .custom-file-label {
+	border-color: var(--theme-border);
+	box-shadow: none;
+}
+
+.btn-primary {
+	background-color: var(--theme-blue-1);
+    border-color: var(--theme-blue-1);
+}
+
+.btn-primary:focus,
+.btn-primary:active,
+.btn-primary:hover {
+	background-color: #1d3874 !important;
+    border-color: #1d3874 !important;
+}
+
+.btn:focus,
+.btn:active,
+.btn:hover {
+	outline: none !important;
+	box-shadow: none !important;
 }

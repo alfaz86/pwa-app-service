@@ -39,17 +39,6 @@ function home() {
         url: "home.html",
         success: function (response) {
             $("#content").html(response);
-            // $("#home").addClass("active");
-            // $("#katalog").removeClass("active");
-            // $("#profil").removeClass("active");
-
-            // $("#load_data").html("");
-            // start = 0;
-            // lazzy_loader(limit);
-            // if (action == "inactive") {
-            //     action = "active";
-            //     fetching_data(limit, start, search);
-            // }
         },
     });
 }
@@ -62,8 +51,14 @@ function catalog() {
         url: "catalog.html",
         success: function (response) {
             $("#content").html(response);
+            $("#load_data").html("");
             name = $("#search").val();
-            fecth(limit, start, name, type);
+            start = 0;
+            lazzy_loader(limit);
+            if (action == "inactive") {
+                action = "active";
+                fetch(limit, start, name, type);
+            }
         },
     });
 }
@@ -104,7 +99,7 @@ function info() {
     });
 }
 
-function fecth(limit, start, name, type) {
+function fetch(limit, start, name, type) {
     $.ajax({
         url: "/api/catalog.php?f=search",
         type: "post",
@@ -187,7 +182,31 @@ $(window).scroll(function () {
         start = start + limit;
         name = $("#search").val();
         setTimeout(function () {
-            fecth(limit, start, name, type);
+            fetch(limit, start, name, type);
         }, 1000);
     }
 });
+
+function createCatalog(data) {
+    $.ajax({
+        url: "/api/catalog.php?f=create",
+        type: "post",
+        contentType: "application/json;",
+        dataType: "json",
+        data: JSON.stringify(data),
+        success: function (response) {
+            lazzy_loader(limit);
+            action = "inactive";
+            start = 0;
+            name = "";
+            $('form#create-catalog').trigger("reset");
+            $("#modalCatalog").modal('hide');
+            $("#load_data").html("");
+            lazzy_loader(limit);
+            if (action == "inactive") {
+                action = "active";
+                fetch(limit, start, name, type);
+            }
+        },
+    });
+}

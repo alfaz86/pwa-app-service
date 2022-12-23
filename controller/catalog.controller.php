@@ -13,4 +13,17 @@ class CatalogController extends CatalogModel
             'all_data' => $this->catalogAllDAta($data)
         ]);
     }
+
+    public function create($data)
+    {
+        $collectData = [];
+        foreach ($data as $object) {
+            $collectData[$object->name] = $object->value;
+        }
+        echo json_encode([
+            'data' => $this->createCatalog((object)$collectData),
+            'status' => true,
+            'result' => true,
+        ]);
+    }
 }
