@@ -26,7 +26,7 @@
         </div>
     </div>
 </div>
-<div class="container-products w-100 px-3">
+<div class="container-products w-100 px-2">
     <div
         id="load_data"
         class="container-product d-flex justify-content-start d-flex w-100 flex-wrap">
@@ -43,6 +43,7 @@
 
     function search() {
         $("#load_data").html("");
+        start = 0;
         name = $("#search").val();
         fecth(limit, start, name, type);
     }
