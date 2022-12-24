@@ -49,4 +49,36 @@ class CatalogModel extends Connection
         $result = $this->connect()->query($sql);
         return $result;
     }
+
+    public function getCatalog($id)
+    {
+        $sql    = "SELECT * FROM catalogs WHERE id = $id";
+        $result = $this->connect()->query($sql);
+        if ($result->num_rows > 0) {
+            while ($data = mysqli_fetch_assoc($result)) {
+                $catalog = $data;
+            }
+            return $catalog;
+        }
+        return null;
+    }
+
+    public function updateCatalog($data)
+    {
+        $qid    = "id      = '$data->id'";
+        $qname  = "name    = '$data->name'";
+        $qprice = ", price = '$data->price'";
+        $qtype  = ", type  = '$data->type'";
+        $qimg   = $data->img ? ", img   = '$data->img'" : "";
+        $sql    = "UPDATE catalogs SET $qname $qprice $qtype $qimg WHERE $qid";
+        $result = $this->connect()->query($sql);
+        return $result;
+    }
+
+    public function deleteCatalog($id)
+    {
+        $sql    = "DELETE FROM catalogs WHERE id = '$id'";
+        $result = $this->connect()->query($sql);
+        return $result;
+    }
 }

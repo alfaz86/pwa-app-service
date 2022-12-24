@@ -5,6 +5,8 @@ let name = "";
 let type = "";
 let result = 1;
 let all_data = 0;
+let img = "";
+let img_edit = null;
 
 $(document).ready(function () {
     home();
@@ -57,7 +59,9 @@ function catalog() {
             lazzy_loader(limit);
             if (action == "inactive") {
                 action = "active";
-                fetch(limit, start, name, type);
+                setTimeout(function () {
+                    fetch(limit, start, name, type);
+                }, 1000);
             }
         },
     });
@@ -188,6 +192,8 @@ $(window).scroll(function () {
 });
 
 function createCatalog(data) {
+    Swal.fire("Sedang menyimpan data");
+    Swal.showLoading();
     $.ajax({
         url: "/api/catalog.php?f=create",
         type: "post",
@@ -195,18 +201,136 @@ function createCatalog(data) {
         dataType: "json",
         data: JSON.stringify(data),
         success: function (response) {
-            lazzy_loader(limit);
-            action = "inactive";
-            start = 0;
-            name = "";
-            $('form#create-catalog').trigger("reset");
-            $("#modalCatalog").modal('hide');
-            $("#load_data").html("");
-            lazzy_loader(limit);
-            if (action == "inactive") {
-                action = "active";
-                fetch(limit, start, name, type);
+            if (response.status) {
+                lazzy_loader(limit);
+                action = "inactive";
+                start = 0;
+                name = "";
+                $('form#create-catalog').trigger("reset");
+                $('#custom-file-label').html("Upload gambar...");
+                $("#modalCatalog").modal('hide');
+                $("#load_data").html("");
+                lazzy_loader(limit);
+                if (action == "inactive") {
+                    action = "active";
+                    fetch(limit, start, name, type);
+                }
+                Swal.fire({
+                    text: response.message,
+                    icon: "success",
+                    confirmButtonText: "Ok",
+                });
+            } else {
+                Swal.fire({
+                    text: response.message,
+                    icon: "error",
+                    confirmButtonText: "Ok",
+                });
             }
         },
+    });
+}
+
+function dialog(id) {
+    $.ajax({
+        url: "/api/catalog.php?f=edit",
+        type: "post",
+        contentType: "application/json;",
+        dataType: "json",
+        data: JSON.stringify(id),
+        success: function (response) {
+            if (response.data != null) {
+                $("#modalEditCatalog").modal('show');
+                $('#id').val(response.data.id);
+                $('#btn-delete').attr({ 'data-id': response.data.id });
+                $('#name-edit').val(response.data.name);
+                $('#price-edit').val(response.data.price);
+                $('#type-edit').val(response.data.type).trigger('change');
+            }
+        },
+    });
+}
+
+function updateCatalog(data) {
+    Swal.fire("Sedang menyimpan data");
+    Swal.showLoading();
+    $.ajax({
+        url: "/api/catalog.php?f=update",
+        type: "post",
+        contentType: "application/json;",
+        dataType: "json",
+        data: JSON.stringify(data),
+        success: function (response) {
+            if (response.status) {
+                lazzy_loader(limit);
+                action = "inactive";
+                start = 0;
+                name = "";
+                img_edit = null;
+                $('form#edit-catalog').trigger("reset");
+                $('#custom-file-label-edit').html("Upload gambar...");
+                $("#modalEditCatalog").modal('hide');
+                $("#load_data").html("");
+                lazzy_loader(limit);
+                if (action == "inactive") {
+                    action = "active";
+                    fetch(limit, start, name, type);
+                }
+                Swal.fire({
+                    text: response.message,
+                    icon: "success",
+                    confirmButtonText: "Ok",
+                });
+            } else {
+                Swal.fire({
+                    text: response.message,
+                    icon: "error",
+                    confirmButtonText: "Ok",
+                });
+            }
+        },
+    });
+}
+
+function deleteCatalog(e) {
+    Swal.fire({
+        text: "Apakah anda yakin ingin menghapus data ini?",
+        icon: "warning",
+        confirmButtonText: "Yes",
+        denyButtonText: 'No',
+    }).then((isConfirm) => {
+        $.ajax({
+            url: "/api/catalog.php?f=delete",
+            type: "post",
+            contentType: "application/json;",
+            dataType: "json",
+            data: JSON.stringify(e.dataset.id),
+            success: function (response) {
+                if (response.status) {
+                    lazzy_loader(limit);
+                    action = "inactive";
+                    start = 0;
+                    name = "";
+                    $("#modalEditCatalog").modal('hide');
+                    $("#load_data").html("");
+                    lazzy_loader(limit);
+                    if (action == "inactive") {
+                        action = "active";
+                        fetch(limit, start, name, type);
+                    }
+                    Swal.fire({
+                        text: response.message,
+                        icon: "success",
+                        confirmButtonText: "Ok",
+                    });
+                } else {
+                    Swal.fire({
+                        text: response.message,
+                        icon: "error",
+                        confirmButtonText: "Ok",
+                    });
+                }
+            },
+        });
     });
 }

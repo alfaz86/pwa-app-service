@@ -26,4 +26,26 @@ class CatalogController extends CatalogModel
             'result' => true,
         ]);
     }
+
+    public function edit($id)
+    {
+        echo json_encode([
+            'data' => $this->getCatalog($id)
+        ]);
+    }
+
+    public function update($data)
+    {
+        echo json_encode([
+            'data' => $this->updateCatalog($data),
+            'status' => true,
+        ]);
+    }
+    public function delete($id)
+    {
+        echo json_encode([
+            'data' => $this->deleteCatalog($id),
+            'status' => true,
+        ]);
+    }
 }
