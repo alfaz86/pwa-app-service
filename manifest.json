@@ -1,0 +1,22 @@
+{
+	"name": "Application Service",
+	"short_name": "App Service",
+	"description": "Aplikasi booking service motor menggunakan pwa js",
+	"icons": [
+		{
+			"src": "assets/images/icon-513.png",
+			"sizes": "513x513",
+			"type": "image/png"
+		},
+		{
+			"src": "assets/images/icon-192.png",
+			"sizes": "192x192",
+			"type": "image/png"
+		}
+	],
+	"start_url": "/",
+	"display": "standalone",
+	"theme_color": "#1B3265",
+	"background_color": "#ffffff",
+	"prefer_related_applications": false
+}
