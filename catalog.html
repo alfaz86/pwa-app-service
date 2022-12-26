@@ -134,6 +134,7 @@
 </button>
 
 <script>
+    if (!checkRole()) $('#btn-add-catalog').css('display', 'none');
     $("#search").on("keypress", (e) => {
         if (e.key === "Enter") search()
     });

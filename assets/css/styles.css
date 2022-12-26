@@ -226,3 +226,125 @@ body {
 	outline: none !important;
 	box-shadow: none !important;
 }
+
+.center-element{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.btn-green{
+	background-color: var(--theme-green) !important;
+	color: white;
+}
+
+.select-status {
+	border-color: var(--theme-border);
+	color: var(--theme-gray-1);
+}
+
+.select-status:focus-visible {
+	outline: none !important;
+	border-color: none !important;
+}
+
+#jumbotron {
+	object-fit: contain !important;
+    background-image: url('../images/bg-image.png');
+}
+
+#jumbotron-text {
+	color: black;
+    height: 40vh;
+}
+
+.text-home {
+	font-weight: bold;
+	color: var(--theme-blue-1);
+}
+
+.slider {
+    width: 100%;
+    text-align: center;
+    overflow: hidden;
+}
+
+.slides {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+}
+
+.slides::-webkit-scrollbar {
+    width: 3px;
+    height: 3px;
+}
+
+.slides::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 5px;
+}
+
+.slides::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.slides > div {
+    scroll-snap-align: start;
+    flex-shrink: 0;
+    width: 200px;
+    margin: 0 10px 0 10px;
+    border-radius: 0.25rem;
+    background: #fff;
+    transform-origin: center center;
+    transform: scale(1);
+    transition: transform 0.5s;
+    position: relative;
+    border: 1px solid var(--theme-border);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    font-size: 100%;
+}
+
+.slides > div.order {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    width: 120px !important;
+}
+
+.img-recommended {
+	max-width: 178px !important;
+	max-height: 178px !important;
+}
+
+.btn-continue {
+	background-color: transparent !important;
+	border-color: transparent !important;
+	width: 80px !important;
+}
+
+.btn-circle {
+	width: 50px !important;
+	height: 50px !important;
+	border-radius: 50% !important;
+	border-color: var(--theme-border) !important;
+	border: 1px solid var(--theme-border) !important;
+	background-color: #fff;
+}
+
+#text-fitur {
+	background-color: var(--theme-blue-1);
+}
+
+#about {
+	padding-bottom: 80px;
+	background-color: #dedede;
+}
+
+.card-datatable {
+	border-left: 8px solid var(--theme-blue-1) !important;
+	border-radius: 2px !important;
+}

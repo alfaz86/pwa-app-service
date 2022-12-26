@@ -48,4 +48,12 @@ class CatalogController extends CatalogModel
             'status' => true,
         ]);
     }
+
+    public function recommended()
+    {
+        echo json_encode([
+            'view' => file_get_contents('../home.html'),
+            'data' => $this->getRecommended()
+        ]);
+    }
 }

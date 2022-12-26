@@ -1,0 +1,42 @@
+<div class="p-3">
+    <div>
+        <form id="create-service">
+            <h5>Tambah Servis</h5>
+            <div class="form-group">
+                <label for="service_type_id">Jenis Servis</label>
+                <select class="form-control" name="service_type_id" id="service_type_id" required>
+                    <option value="" selected disabled>--pilih--</option>
+                </select>
+                <input type="text" class="form-control" value="" id="price" readonly>
+            </div>
+            <div class="form-group">
+                <label for="date">Tanggal</label>
+                <input type="date" class="form-control" name="date" id="date" required>
+            </div>
+            <label for="time">Waktu</label>
+            <input type="time" class="form-control" name="time" id="time" required>
+    
+            <button type="submit" class="btn btn-primary mt-3">Booking</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    $('body').css("background-color", "#FFF");
+
+    $('#service_type_id').change(function() {
+        $('#price').val("Rp "+numFormat(service_type_price[$(this).val()]));
+    })
+    
+    $("form#create-service").submit(function(e) {
+        e.preventDefault();
+        let form = $(this).closest('form').serializeArray();
+        data = {
+            "user_id": user_session.id
+        };
+        form.forEach( (v, i) => {
+            data[v.name] = v.value;
+        });
+        createService(data);
+    });
+</script>

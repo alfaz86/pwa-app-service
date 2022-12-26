@@ -81,4 +81,18 @@ class CatalogModel extends Connection
         $result = $this->connect()->query($sql);
         return $result;
     }
+
+    public function getRecommended()
+    {
+        $sql = "SELECT * FROM catalogs";
+        $sql .= " ORDER BY id DESC LIMIT 4";
+        $result = $this->connect()->query($sql);
+        if ($result->num_rows > 0) {
+            while ($data = mysqli_fetch_assoc($result)) {
+                $catalog[] = $data;
+            }
+            return $catalog;
+        }
+        return [];
+    }
 }
