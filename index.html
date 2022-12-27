@@ -110,5 +110,61 @@
             ($('body').contents('div').remove());
         });
     </script>
+
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-analytics.js";
+        import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-messaging.js";
+        // TODO: Add SDKs for Firebase products that you want to use
+        // https://firebase.google.com/docs/web/setup#available-libraries
+
+        // Your web app's Firebase configuration
+        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+        const firebaseConfig = {
+            apiKey: "AIzaSyAKTyJuYvmVtF9PIxWDj3fnQm8mcfQVE-8",
+            authDomain: "pwa-app-service.firebaseapp.com",
+            projectId: "pwa-app-service",
+            storageBucket: "pwa-app-service.appspot.com",
+            messagingSenderId: "93359140602",
+            appId: "1:93359140602:web:1a9aafd112c03ec99d2343",
+            measurementId: "G-6NEK4VY4S7"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+        
+        const messaging = getMessaging();
+        getToken(messaging, { vapidKey: 'BE5KPX29CEf1PeF2Xx7geQpt57LvFEmCDa9bs_KAx9okyhEPOEocnyXa7fwXZiGWKcc8jY7rISN4QJmPUwE5170' }).then((currentToken) => {
+            if (currentToken) {
+                console.log(currentToken);
+                // Send the token to your server and update the UI if necessary
+                // ...
+                dataNotif.to = currentToken;
+            } else {
+                // Show permission request UI
+                console.log('No registration token available. Request permission to generate one.');
+                // ...
+            }
+        }).catch((err) => {
+            console.log('An error occurred while retrieving token. ',err);
+            // ...
+        });
+        onMessage(messaging, (payload) => {
+            const notificationOption = {
+                body: payload.notification.body,
+                icon: payload.notification.icon
+            };
+            if (Notification.permission === "granted") {
+                var notification = new Notification(payload.notification.title, notificationOption);
+                notification.onclick = function (ev) {
+                    ev.preventDefault();
+                    window.open("/", '_blank');
+                    notification.close();
+                }
+            }
+        });
+    </script>
 </body>
 </html>

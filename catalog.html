@@ -148,7 +148,7 @@
         if (action == "inactive") {
             action = "active";
             setTimeout(function () {
-                fetch(limit, start, name, type);
+                fetching_data(limit, start, name, type);
             }, 1000);
         }
     }

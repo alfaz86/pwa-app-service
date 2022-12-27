@@ -8,7 +8,8 @@ class ServiceController extends ServiceModel
     {
         echo json_encode([
             'view' => file_get_contents('../service/index.html'),
-            'data' => $this->getDataService()
+            'data' => $this->getDataService(),
+            'role' => $this->userSessionRole
         ]);
     }
 
@@ -33,6 +34,13 @@ class ServiceController extends ServiceModel
         echo json_encode([
             'data' => $this->createService($data),
             'status' => true
+        ]);
+    }
+
+    public function updateStatus($data)
+    {
+        echo json_encode([
+            'status' => $this->updateService($data)
         ]);
     }
 }
