@@ -121,7 +121,7 @@ function catalog() {
             if (action == "inactive") {
                 action = "active";
                 setTimeout(function () {
-                    fetch(limit, start, name, type);
+                    fetching_data(limit, start, name, type);
                 }, 1000);
             }
         },
@@ -138,6 +138,8 @@ function service() {
         dataType: "json",
         success: function (response) {
             $("#content").html(response.view);
+            console.log(response.role);
+            console.log(response.data);
             if ((response.data).length > 0) {
                 content = "";
                 $.each(response.data, function (i, data) {
@@ -146,11 +148,13 @@ function service() {
                         <div class="p-3">
                             <div class="p-0 m-0 d-flex justify-content-between">
                                 <span style="font-weight: bold; color: var(--theme-blue-1)">${data.no_service}</span>
-                                <select class="select-status" name="status" id="status" onchange="">
-                                    <option value="pending" ${data.status == "pending" ? "selected" : ""}>pending</option>
-                                    <option value="confirm" ${data.status == "confirm" ? "selected" : ""}>confirm</option>
-                                    <option value="process" ${data.status == "process" ? "selected" : ""}>process</option>
-                                    <option value="done" ${data.status == "done" ? "selected" : ""}>done</option>
+                                <span style="font-weight: bold; color: var(--theme-gray-1)" class="status-c">${data.status}</span>
+                                <select class="select-status status" name="status" id="status" onchange="updateStatus('${data.id}', '${data.no_service}', this.value)">
+                                <option value="pending" ${data.status == "pending" ? "selected" : ""} disabled>pending</option>
+                                <option value="confirm" ${data.status == "confirm" ? "selected" : ""} ${['process', 'done', 'cancel'].includes(data.status) ? "disabled" : ""}>confirm</option>
+                                <option value="process" ${data.status == "process" ? "selected" : ""} ${['done', 'cancel'].includes(data.status) ? "disabled" : ""}>process</option>
+                                <option value="done" ${data.status == "done" ? "selected" : ""} ${['cancel'].includes(data.status) ? "disabled" : ""}>done</option>
+                                <option value="cancel" ${data.status == "cancel" ? "selected" : ""}>cancel</option>
                                 </select>
                             </div>
                             <span style="font-weight: bold; color: var(--theme-gray-1)">${data.user.name}</span>
@@ -165,6 +169,11 @@ function service() {
                     `;
                 });
                 $('#div-services').html(content);
+                if (response.role == 'admin') {
+                    $('.status-c').remove();
+                } else {
+                    $('.status').remove();
+                }
                 document.getElementById('nav').scrollIntoView();
             } else {
                 $('#div-services').html(`<h5 style="color: var(--theme-gray-3) !important;">Belum ada jadwal servis</h5>`);
@@ -221,7 +230,7 @@ function info() {
     }
 }
 
-function fetch(limit, start, name, type) {
+function fetching_data(limit, start, name, type) {
     $.ajax({
         url: "/api/catalog.php?f=search",
         type: "post",
@@ -303,7 +312,7 @@ $(window).scroll(function () {
         start = start + limit;
         name = $("#search").val();
         setTimeout(function () {
-            fetch(limit, start, name, type);
+            fetching_data(limit, start, name, type);
         }, 1000);
     }
 });
@@ -330,7 +339,7 @@ function createCatalog(data) {
                 lazzy_loader(limit);
                 if (action == "inactive") {
                     action = "active";
-                    fetch(limit, start, name, type);
+                    fetching_data(limit, start, name, type);
                 }
                 Swal.fire({
                     text: response.message,
@@ -392,7 +401,7 @@ function updateCatalog(data) {
                 lazzy_loader(limit);
                 if (action == "inactive") {
                     action = "active";
-                    fetch(limit, start, name, type);
+                    fetching_data(limit, start, name, type);
                 }
                 Swal.fire({
                     text: response.message,
@@ -436,7 +445,7 @@ function deleteCatalog(e) {
                         lazzy_loader(limit);
                         if (action == "inactive") {
                             action = "active";
-                            fetch(limit, start, name, type);
+                            fetching_data(limit, start, name, type);
                         }
                         Swal.fire({
                             text: response.message,
@@ -551,4 +560,72 @@ function createService(data) {
             }
         },
     });
+}
+
+function updateStatus(id, number, status) {
+    Swal.fire("Sedang menyimpan data");
+    Swal.showLoading();
+    $.ajax({
+        url: "/api/service.php?f=updateStatus",
+        type: "post",
+        contentType: "application/json;",
+        dataType: "json",
+        data: JSON.stringify({ id, status }),
+        success: function (response) {
+            console.log(response);
+            if (response.status) {
+                textStatus = status == "confirm" ? "sudah dikonfirmasi"
+                    : status == "process" ? "sudah diproses"
+                        : status == "done" ? "sudah selesai"
+                            : "dibatalkan karena jadwal sudah ada";
+                console.log(textStatus);
+                dataNotif.notification.body = `Booking anda No:${number} ${textStatus}`
+                fetchApiNotif()
+                Swal.fire({
+                    text: response.message,
+                    icon: "success",
+                    confirmButtonText: "Ok",
+                    allowOutsideClick: false
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        service();
+                    }
+                });
+            } else {
+                Swal.fire({
+                    text: response.message,
+                    icon: "error",
+                    confirmButtonText: "Ok",
+                });
+            }
+        },
+    });
+}
+
+// Notification
+let dataNotif = {
+    "to": "",
+    "notification": {
+        "title": "Application Service",
+        "body": "",
+        "icon": "https://pwa-app-service.000webhostapp.com/assets/images/icon-513.png"
+    }
+};
+
+function fetchApiNotif() {
+    fetch('https://fcm.googleapis.com/fcm/send', {
+        method: 'POST', // or 'PUT'
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'key=AAAAFbyjbvo:APA91bFTRtZF54Wy3_g-HUQ_UrD0a_2riVhjqaOoOok4YRzVH3fjTU-68GA0Wfpx8O8Q19lR6HUlru1YfjhHbSMSN-u5yXoj0SCTU7vfA576dIoekJdDDhx6hu-1bC0R6lJWsTKuURoz',
+        },
+        body: JSON.stringify(dataNotif),
+    })
+        .then((response) => response.json())
+        .then((data) => {
+            console.log('Success:', data);
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
 }

@@ -5,10 +5,12 @@ include('../connection.php');
 class ServiceModel extends Connection
 {
     public $userSession;
+    public $userSessionRole;
     public function __construct()
     {
         session_start();
         $this->userSession = $_SESSION['user'] ?? null;
+        $this->userSessionRole = $_SESSION['user']['role'] ?? null;
     }
 
     public function serviceType()
@@ -78,5 +80,12 @@ class ServiceModel extends Connection
             return $user;
         }
         return null;
+    }
+
+    public function updateService($data)
+    {
+        $sql     = "UPDATE services SET status = '$data->status' WHERE id = '$data->id'";
+        $result  = $this->connect()->query($sql);
+        return $result;
     }
 }
